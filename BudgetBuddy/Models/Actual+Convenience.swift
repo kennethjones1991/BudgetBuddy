@@ -9,7 +9,8 @@ import Foundation
 import CoreData
 
 extension Actual {
-    @discardableResult convenience init(rent: Double?,
+    @discardableResult convenience init(month: String,
+                                        rent: Double?,
                                         power: Double?,
                                         water: Double?,
                                         internet: Double?,
@@ -19,6 +20,7 @@ extension Actual {
                                         recreation: Double?,
                                         context: NSManagedObjectContext = CoreDataStack.shared.mainContext) {
         self.init(context: context)
+        self.month = month
         self.rent = rent ?? 0
         self.power = power ?? 0
         self.water = water ?? 0

@@ -24,6 +24,7 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     @IBOutlet weak var monthButton: UIBarButtonItem!
     @IBOutlet weak var monthList: UITableView!
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    var currentMonth = 0
     var titleMonth = "January"
     
     var rent: Double = 0
@@ -35,17 +36,35 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var transportation: Double = 0
     var recreation: Double = 0
     
+    var categories: [Double] = []
+    var textFields: [UITextField] = []
+    
     var eventStore = EKEventStore()
+    
+    let moneyController = MoneyController.shared
+    let context = CoreDataStack.shared.mainContext
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navBar.topItem?.title = "My \(titleMonth) Budget"
+        categories = [rent, power, water, internet, phone, food, transportation, recreation]
+        textFields = [rentTextField, powerTextField, waterTextField, internetTextField, phoneTextField, foodTextField, transportationTextField, recreationTextField]
+        
         monthList.layer.cornerRadius = 7
         monthList.layer.borderWidth = 0.5
         monthList.layer.borderColor = UIColor.gray.cgColor
         monthList.isHidden = true
         updateValues()
+    }
+    
+    func firstInteraction() -> Bool {
+        let defaults = UserDefaults.standard
+        if let _ = defaults.string(forKey: "firstInteraction") {
+            return false
+        } else {
+            defaults.set(true, forKey: "firstInteraction")
+            return true
+        }
     }
     
     func updateValues() {
@@ -60,6 +79,20 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
             secondTab.recreation = recreation
             secondTab.titleMonth = titleMonth
         }
+        
+        if !firstInteraction() {
+            for (i, textField) in textFields.enumerated() {
+                let amount = moneyController.budgets[currentMonth][i].amount
+                
+                if amount > 0 {
+                    textField.text = "$\(String(format: "%.2f", amount))"
+                } else {
+                    textField.text = ""
+                }
+            }
+        }
+        
+        navBar.topItem?.title = "My \(titleMonth) Budget"
     }
     
     @IBAction func selectMonth(_ sender: Any) {
@@ -72,8 +105,8 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     
     // MARK: - Enter Budget Amounts
     
-    func showAddAlert(budgetCategory: String, textField: UITextField) {
-        let alert = UIAlertController(title: budgetCategory, message: "Enter budget amount:", preferredStyle: .alert)
+    func showAddAlert(budget: String, category: Int, textField: UITextField) {
+        let alert = UIAlertController(title: budget, message: "Enter budget amount:", preferredStyle: .alert)
         
         var amountTextField: UITextField?
         
@@ -83,30 +116,16 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
             amountTextField = alertTextField
         }
         
-        let addAmountAction = UIAlertAction(title: "Add \(budgetCategory)", style: .default) { (_) in
+        let addAmountAction = UIAlertAction(title: "Add \(budget)", style: .default) { (_) in
             guard let amountText = amountTextField?.text,
                   let amount = Double(amountText) else { return }
             
-            let finalAmount = String(format: "%.2f", amount)
-            textField.text = "$\(finalAmount)"
+            textField.text = "$\(String(format: "%.2f", amount))"
             
-            if budgetCategory == "Rent" {
-                self.rent = amount
-            } else if budgetCategory == "Power" {
-                self.power = amount
-            } else if budgetCategory == "Water" {
-                self.water = amount
-            } else if budgetCategory == "Internet" {
-                self.internet = amount
-            } else if budgetCategory == "Phone" {
-                self.phone = amount
-            } else if budgetCategory == "Food" {
-                self.food = amount
-            } else if budgetCategory == "Transportation" {
-                self.transportation = amount
-            } else if budgetCategory == "Recreation" {
-                self.recreation = amount
-            }
+            self.moneyController.budgets[self.currentMonth][category].amount = amount
+            self.categories[category] = amount
+            
+            try? self.context.save()
             
             self.updateValues()
         }
@@ -120,35 +139,35 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func addRent(_ sender: Any) {
-        showAddAlert(budgetCategory: "Rent", textField: rentTextField)
+        showAddAlert(budget: "Rent", category: 0, textField: rentTextField)
     }
     
     @IBAction func addPower(_ sender: Any) {
-        showAddAlert(budgetCategory: "Power", textField: powerTextField)
+        showAddAlert(budget: "Power", category: 1, textField: powerTextField)
     }
     
     @IBAction func addWater(_ sender: Any) {
-        showAddAlert(budgetCategory: "Water", textField: waterTextField)
+        showAddAlert(budget: "Water", category: 2, textField: waterTextField)
     }
     
     @IBAction func addInternet(_ sender: Any) {
-        showAddAlert(budgetCategory: "Internet", textField: internetTextField)
+        showAddAlert(budget: "Internet", category: 3, textField: internetTextField)
     }
     
     @IBAction func addPhone(_ sender: Any) {
-        showAddAlert(budgetCategory: "Phone", textField: phoneTextField)
+        showAddAlert(budget: "Phone", category: 4, textField: phoneTextField)
     }
     
     @IBAction func addFood(_ sender: Any) {
-        showAddAlert(budgetCategory: "Food", textField: foodTextField)
+        showAddAlert(budget: "Food", category: 5, textField: foodTextField)
     }
     
     @IBAction func addTransportation(_ sender: Any) {
-        showAddAlert(budgetCategory: "Transportation", textField: transportationTextField)
+        showAddAlert(budget: "Transportation", category: 6, textField: transportationTextField)
     }
     
     @IBAction func addRecreation(_ sender: Any) {
-        showAddAlert(budgetCategory: "Recreation", textField: recreationTextField)
+        showAddAlert(budget: "Recreation", category: 7, textField: recreationTextField)
     }
     
     // MARK: - Add Payment Reminders
@@ -161,7 +180,7 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 
                 let currencyAmount = String(format: "%.2f", amount)
                 let reminder:EKReminder = EKReminder(eventStore: self.eventStore)
-                reminder.title = "Pay the $\(currencyAmount) \(budgetCategory) bill"
+                reminder.title = "Pay the $\(currencyAmount) \(budgetCategory) bill in \(self.titleMonth)"
                 
                 let alarmTime = Date().addingTimeInterval(10)
                 let alarm = EKAlarm(absoluteDate: alarmTime)
@@ -249,7 +268,9 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedItem = months[indexPath.row]
         
-        navBar.topItem?.title = "My \(selectedItem) Budget"
+        titleMonth = selectedItem
+        
+        currentMonth = indexPath.row
         
         monthList.isHidden = true
         
