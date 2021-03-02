@@ -10,7 +10,6 @@
 		611BCC4D25A8013300B74726 /* Money.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC4B25A8013300B74726 /* Money.xcdatamodeld */; };
 		611BCC5D25A8042D00B74726 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC5C25A8042D00B74726 /* CoreDataStack.swift */; };
 		611BCC6025A8083800B74726 /* Budget+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC5F25A8083800B74726 /* Budget+Convenience.swift */; };
-		611BCC6325A8084600B74726 /* Actual+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC6225A8084600B74726 /* Actual+Convenience.swift */; };
 		611BCC6625A80F1700B74726 /* MoneyController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC6525A80F1700B74726 /* MoneyController.swift */; };
 		611BCC6A25A810D300B74726 /* BudgetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC6925A810D300B74726 /* BudgetViewController.swift */; };
 		611BCC6D25A810E300B74726 /* ActualViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 611BCC6C25A810E300B74726 /* ActualViewController.swift */; };
@@ -25,7 +24,6 @@
 		611BCC4C25A8013300B74726 /* Money.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Money.xcdatamodel; sourceTree = "<group>"; };
 		611BCC5C25A8042D00B74726 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		611BCC5F25A8083800B74726 /* Budget+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Budget+Convenience.swift"; sourceTree = "<group>"; };
-		611BCC6225A8084600B74726 /* Actual+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Actual+Convenience.swift"; sourceTree = "<group>"; };
 		611BCC6525A80F1700B74726 /* MoneyController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyController.swift; sourceTree = "<group>"; };
 		611BCC6925A810D300B74726 /* BudgetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BudgetViewController.swift; sourceTree = "<group>"; };
 		611BCC6C25A810E300B74726 /* ActualViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActualViewController.swift; sourceTree = "<group>"; };
@@ -72,7 +70,6 @@
 				611BCC4B25A8013300B74726 /* Money.xcdatamodeld */,
 				611BCC5C25A8042D00B74726 /* CoreDataStack.swift */,
 				611BCC5F25A8083800B74726 /* Budget+Convenience.swift */,
-				611BCC6225A8084600B74726 /* Actual+Convenience.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -205,7 +202,6 @@
 			files = (
 				611BCC5D25A8042D00B74726 /* CoreDataStack.swift in Sources */,
 				611BCC6D25A810E300B74726 /* ActualViewController.swift in Sources */,
-				611BCC6325A8084600B74726 /* Actual+Convenience.swift in Sources */,
 				61923F5F259DA05D00580D60 /* AppDelegate.swift in Sources */,
 				611BCC4D25A8013300B74726 /* Money.xcdatamodeld in Sources */,
 				611BCC6625A80F1700B74726 /* MoneyController.swift in Sources */,

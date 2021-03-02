@@ -8,6 +8,8 @@
 import Foundation
 import CoreData
 
+// I was going to use enums, but just decided to use the actual numbers instead.
+// These enums are still commented here for reference to which numbers go to which values.
 //enum Month: Int {
 //    case january = 0
 //    case february = 1
@@ -37,6 +39,7 @@ import CoreData
 class MoneyController {
     static let shared = MoneyController()
     
+    // Budgets
     var janRentBudget = Budget()
     var janPowerBudget = Budget()
     var janWaterBudget = Budget()
@@ -160,12 +163,138 @@ class MoneyController {
     
     var budgets: [[Budget]] = []
     
+    // Actuals
+    var janRentActual = Budget()
+    var janPowerActual = Budget()
+    var janWaterActual = Budget()
+    var janInternetActual = Budget()
+    var janPhoneActual = Budget()
+    var janFoodActual = Budget()
+    var janTransportationActual = Budget()
+    var janRecreationActual = Budget()
+    
+    var febRentActual = Budget()
+    var febPowerActual = Budget()
+    var febWaterActual = Budget()
+    var febInternetActual = Budget()
+    var febPhoneActual = Budget()
+    var febFoodActual = Budget()
+    var febTransportationActual = Budget()
+    var febRecreationActual = Budget()
+    
+    var marRentActual = Budget()
+    var marPowerActual = Budget()
+    var marWaterActual = Budget()
+    var marInternetActual = Budget()
+    var marPhoneActual = Budget()
+    var marFoodActual = Budget()
+    var marTransportationActual = Budget()
+    var marRecreationActual = Budget()
+    
+    var aprRentActual = Budget()
+    var aprPowerActual = Budget()
+    var aprWaterActual = Budget()
+    var aprInternetActual = Budget()
+    var aprPhoneActual = Budget()
+    var aprFoodActual = Budget()
+    var aprTransportationActual = Budget()
+    var aprRecreationActual = Budget()
+    
+    var mayRentActual = Budget()
+    var mayPowerActual = Budget()
+    var mayWaterActual = Budget()
+    var mayInternetActual = Budget()
+    var mayPhoneActual = Budget()
+    var mayFoodActual = Budget()
+    var mayTransportationActual = Budget()
+    var mayRecreationActual = Budget()
+    
+    var junRentActual = Budget()
+    var junPowerActual = Budget()
+    var junWaterActual = Budget()
+    var junInternetActual = Budget()
+    var junPhoneActual = Budget()
+    var junFoodActual = Budget()
+    var junTransportationActual = Budget()
+    var junRecreationActual = Budget()
+    
+    var julRentActual = Budget()
+    var julPowerActual = Budget()
+    var julWaterActual = Budget()
+    var julInternetActual = Budget()
+    var julPhoneActual = Budget()
+    var julFoodActual = Budget()
+    var julTransportationActual = Budget()
+    var julRecreationActual = Budget()
+    
+    var augRentActual = Budget()
+    var augPowerActual = Budget()
+    var augWaterActual = Budget()
+    var augInternetActual = Budget()
+    var augPhoneActual = Budget()
+    var augFoodActual = Budget()
+    var augTransportationActual = Budget()
+    var augRecreationActual = Budget()
+    
+    var sepRentActual = Budget()
+    var sepPowerActual = Budget()
+    var sepWaterActual = Budget()
+    var sepInternetActual = Budget()
+    var sepPhoneActual = Budget()
+    var sepFoodActual = Budget()
+    var sepTransportationActual = Budget()
+    var sepRecreationActual = Budget()
+    
+    var octRentActual = Budget()
+    var octPowerActual = Budget()
+    var octWaterActual = Budget()
+    var octInternetActual = Budget()
+    var octPhoneActual = Budget()
+    var octFoodActual = Budget()
+    var octTransportationActual = Budget()
+    var octRecreationActual = Budget()
+    
+    var novRentActual = Budget()
+    var novPowerActual = Budget()
+    var novWaterActual = Budget()
+    var novInternetActual = Budget()
+    var novPhoneActual = Budget()
+    var novFoodActual = Budget()
+    var novTransportationActual = Budget()
+    var novRecreationActual = Budget()
+    
+    var decRentActual = Budget()
+    var decPowerActual = Budget()
+    var decWaterActual = Budget()
+    var decInternetActual = Budget()
+    var decPhoneActual = Budget()
+    var decFoodActual = Budget()
+    var decTransportationActual = Budget()
+    var decRecreationActual = Budget()
+    
+    var janActuals: [Budget] = []
+    var febActuals: [Budget] = []
+    var marActuals: [Budget] = []
+    var aprActuals: [Budget] = []
+    var mayActuals: [Budget] = []
+    var junActuals: [Budget] = []
+    var julActuals: [Budget] = []
+    var augActuals: [Budget] = []
+    var sepActuals: [Budget] = []
+    var octActuals: [Budget] = []
+    var novActuals: [Budget] = []
+    var decActuals: [Budget] = []
+    
+    var actuals: [[Budget]] = []
+    
     var context = CoreDataStack.shared.mainContext
     
     init() {
         populateBudgets()
+        populateActuals()
     }
     
+    // MARK: - Fetch and populate budgets
     func populateBudgets() {
         janBudgets = [janRentBudget, janPowerBudget, janWaterBudget, janInternetBudget, janPhoneBudget, janFoodBudget, janTransportationBudget, janRecreationBudget]
         febBudgets = [febRentBudget, febPowerBudget, febWaterBudget, febInternetBudget, febPhoneBudget, febFoodBudget, febTransportationBudget, febRecreationBudget]
@@ -183,16 +312,19 @@ class MoneyController {
         budgets = [janBudgets, febBudgets, marBudgets, aprBudgets, mayBudgets, junBudgets, julBudgets, augBudgets, sepBudgets, octBudgets, novBudgets, decBudgets]
         
         let fetchBudgets: NSFetchRequest<Budget> = Budget.fetchRequest()
+        
+        fetchBudgets.predicate = NSPredicate(format: "%K == true", #keyPath(Budget.budget))
+        
         fetchBudgets.sortDescriptors = [
             NSSortDescriptor(key: "month", ascending: true),
             NSSortDescriptor(key: "category", ascending: true)
         ]
         
-        guard let results = try? context.fetch(fetchBudgets) else { return }
+        guard let budgetResults = try? context.fetch(fetchBudgets) else { return }
         
         // There should be either 0 or 96 results every time no matter what; otherwise there's an error
-        print("Number of results: \(results.count)")
-        if results.count == 0 {
+        print("Number of results: \(budgetResults.count)")
+        if budgetResults.count == 0 {
             // Create new budgets and add to Core Data
             janRentBudget = Budget(month: 0, category: 0, amount: 0, budget: true)
             janPowerBudget = Budget(month: 0, category: 1, amount: 0, budget: true)
@@ -319,15 +451,11 @@ class MoneyController {
             
             try? context.save()
         } else {
-            // Populate budgets with data already stored
-            print("😍Look at me; I'm the else.")
             var x = 0
             var y = 0
             
-            for result in results {
+            for result in budgetResults {
                 budgets[x][y] = result
-//                print("😇Result: \(result.month)")
-//                print("🚀Budget: \(budgets[x][y])")
                 
                 if y == 7 {
                     x += 1
@@ -341,49 +469,178 @@ class MoneyController {
         }
     }
     
-//    var janBudget = Budget(month: Month.january.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var febBudget = Budget(month: Month.february.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var marBudget = Budget(month: Month.march.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var aprBudget = Budget(month: Month.april.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var mayBudget = Budget(month: Month.may.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var junBudget = Budget(month: Month.june.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var julBudget = Budget(month: Month.july.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var augBudget = Budget(month: Month.august.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var sepBudget = Budget(month: Month.september.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var octBudget = Budget(month: Month.october.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var novBudget = Budget(month: Month.november.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var decBudget = Budget(month: Month.december.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-    
-//    var janActual = Actual(month: Month.january.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var febActual = Actual(month: Month.february.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var marActual = Actual(month: Month.march.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var aprActual = Actual(month: Month.april.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var mayActual = Actual(month: Month.may.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var junActual = Actual(month: Month.june.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var julActual = Actual(month: Month.july.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var augActual = Actual(month: Month.august.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var sepActual = Actual(month: Month.september.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var octActual = Actual(month: Month.october.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var novActual = Actual(month: Month.november.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-//    var decActual = Actual(month: Month.december.rawValue, rent: 0, power: 0, water: 0, internet: 0, phone: 0, food: 0, transportation: 0, recreation: 0)
-    
-//    init() {
-//        fetechObjects()
-//    }
-//
-//    func fetechObjects() {
-//        // load objects at start up
-//    }
-//
-//    func doSomething() {
-//
-//    }
-//
-//    func addBUdget(budget: Budget) {
-//
-//        budgetArray.append(budget)
-//
-//        // Save to core data
-//
-//    }
+    // MARK: - Fetch and populate actuals
+    func populateActuals() {
+        janActuals = [janRentActual, janPowerActual, janWaterActual, janInternetActual, janPhoneActual, janFoodActual, janTransportationActual, janRecreationActual]
+        febActuals = [febRentActual, febPowerActual, febWaterActual, febInternetActual, febPhoneActual, febFoodActual, febTransportationActual, febRecreationActual]
+        marActuals = [marRentActual, marPowerActual, marWaterActual, marInternetActual, marPhoneActual, marFoodActual, marTransportationActual, marRecreationActual]
+        aprActuals = [aprRentActual, aprPowerActual, aprWaterActual, aprInternetActual, aprPhoneActual, aprFoodActual, aprTransportationActual, aprRecreationActual]
+        mayActuals = [mayRentActual, mayPowerActual, mayWaterActual, mayInternetActual, mayPhoneActual, mayFoodActual, mayTransportationActual, mayRecreationActual]
+        junActuals = [junRentActual, junPowerActual, junWaterActual, junInternetActual, junPhoneActual, junFoodActual, junTransportationActual, junRecreationActual]
+        julActuals = [julRentActual, julPowerActual, julWaterActual, julInternetActual, julPhoneActual, julFoodActual, julTransportationActual, julRecreationActual]
+        augActuals = [augRentActual, augPowerActual, augWaterActual, augInternetActual, augPhoneActual, augFoodActual, augTransportationActual, augRecreationActual]
+        sepActuals = [sepRentActual, sepPowerActual, sepWaterActual, sepInternetActual, sepPhoneActual, sepFoodActual, sepTransportationActual, sepRecreationActual]
+        octActuals = [octRentActual, octPowerActual, octWaterActual, octInternetActual, octPhoneActual, octFoodActual, octTransportationActual, octRecreationActual]
+        novActuals = [novRentActual, novPowerActual, novWaterActual, novInternetActual, novPhoneActual, novFoodActual, novTransportationActual, novRecreationActual]
+        decActuals = [decRentActual, decPowerActual, decWaterActual, decInternetActual, decPhoneActual, decFoodActual, decTransportationActual, decRecreationActual]
+
+        actuals = [janActuals, febActuals, marActuals, aprActuals, mayActuals, junActuals, julActuals, augActuals, sepActuals, octActuals, novActuals, decActuals]
+        
+        let fetchActuals: NSFetchRequest<Budget> = Budget.fetchRequest()
+        
+        fetchActuals.predicate = NSPredicate(format: "%K == false", #keyPath(Budget.budget))
+        
+        fetchActuals.sortDescriptors = [
+            NSSortDescriptor(key: "month", ascending: true),
+            NSSortDescriptor(key: "category", ascending: true)
+        ]
+        
+        guard let actualResults = try? context.fetch(fetchActuals) else { return }
+        
+        // There should be either 0 or 96 results every time no matter what; otherwise there's an error
+        print("Number of results: \(actualResults.count)")
+        if actualResults.count == 0 {
+            // Create new actuals and add to Core Data
+            janRentActual = Budget(month: 0, category: 0, amount: 0, budget: false)
+            janPowerActual = Budget(month: 0, category: 1, amount: 0, budget: false)
+            janWaterActual = Budget(month: 0, category: 2, amount: 0, budget: false)
+            janInternetActual = Budget(month: 0, category: 3, amount: 0, budget: false)
+            janPhoneActual = Budget(month: 0, category: 4, amount: 0, budget: false)
+            janFoodActual = Budget(month: 0, category: 5, amount: 0, budget: false)
+            janTransportationActual = Budget(month: 0, category: 6, amount: 0, budget: false)
+            janRecreationActual = Budget(month: 0, category: 7, amount: 0, budget: false)
+            
+            febRentActual = Budget(month: 1, category: 0, amount: 0, budget: false)
+            febPowerActual = Budget(month: 1, category: 1, amount: 0, budget: false)
+            febWaterActual = Budget(month: 1, category: 2, amount: 0, budget: false)
+            febInternetActual = Budget(month: 1, category: 3, amount: 0, budget: false)
+            febPhoneActual = Budget(month: 1, category: 4, amount: 0, budget: false)
+            febFoodActual = Budget(month: 1, category: 5, amount: 0, budget: false)
+            febTransportationActual = Budget(month: 1, category: 6, amount: 0, budget: false)
+            febRecreationActual = Budget(month: 1, category: 7, amount: 0, budget: false)
+            
+            marRentActual = Budget(month: 2, category: 0, amount: 0, budget: false)
+            marPowerActual = Budget(month: 2, category: 1, amount: 0, budget: false)
+            marWaterActual = Budget(month: 2, category: 2, amount: 0, budget: false)
+            marInternetActual = Budget(month: 2, category: 3, amount: 0, budget: false)
+            marPhoneActual = Budget(month: 2, category: 4, amount: 0, budget: false)
+            marFoodActual = Budget(month: 2, category: 5, amount: 0, budget: false)
+            marTransportationActual = Budget(month: 2, category: 6, amount: 0, budget: false)
+            marRecreationActual = Budget(month: 2, category: 7, amount: 0, budget: false)
+            
+            aprRentActual = Budget(month: 3, category: 0, amount: 0, budget: false)
+            aprPowerActual = Budget(month: 3, category: 1, amount: 0, budget: false)
+            aprWaterActual = Budget(month: 3, category: 2, amount: 0, budget: false)
+            aprInternetActual = Budget(month: 3, category: 3, amount: 0, budget: false)
+            aprPhoneActual = Budget(month: 3, category: 4, amount: 0, budget: false)
+            aprFoodActual = Budget(month: 3, category: 5, amount: 0, budget: false)
+            aprTransportationActual = Budget(month: 3, category: 6, amount: 0, budget: false)
+            aprRecreationActual = Budget(month: 3, category: 7, amount: 0, budget: false)
+            
+            mayRentActual = Budget(month: 4, category: 0, amount: 0, budget: false)
+            mayPowerActual = Budget(month: 4, category: 1, amount: 0, budget: false)
+            mayWaterActual = Budget(month: 4, category: 2, amount: 0, budget: false)
+            mayInternetActual = Budget(month: 4, category: 3, amount: 0, budget: false)
+            mayPhoneActual = Budget(month: 4, category: 4, amount: 0, budget: false)
+            mayFoodActual = Budget(month: 4, category: 5, amount: 0, budget: false)
+            mayTransportationActual = Budget(month: 4, category: 6, amount: 0, budget: false)
+            mayRecreationActual = Budget(month: 4, category: 7, amount: 0, budget: false)
+            
+            junRentActual = Budget(month: 5, category: 0, amount: 0, budget: false)
+            junPowerActual = Budget(month: 5, category: 1, amount: 0, budget: false)
+            junWaterActual = Budget(month: 5, category: 2, amount: 0, budget: false)
+            junInternetActual = Budget(month: 5, category: 3, amount: 0, budget: false)
+            junPhoneActual = Budget(month: 5, category: 4, amount: 0, budget: false)
+            junFoodActual = Budget(month: 5, category: 5, amount: 0, budget: false)
+            junTransportationActual = Budget(month: 5, category: 6, amount: 0, budget: false)
+            junRecreationActual = Budget(month: 5, category: 7, amount: 0, budget: false)
+            
+            julRentActual = Budget(month: 6, category: 0, amount: 0, budget: false)
+            julPowerActual = Budget(month: 6, category: 1, amount: 0, budget: false)
+            julWaterActual = Budget(month: 6, category: 2, amount: 0, budget: false)
+            julInternetActual = Budget(month: 6, category: 3, amount: 0, budget: false)
+            julPhoneActual = Budget(month: 6, category: 4, amount: 0, budget: false)
+            julFoodActual = Budget(month: 6, category: 5, amount: 0, budget: false)
+            julTransportationActual = Budget(month: 6, category: 6, amount: 0, budget: false)
+            julRecreationActual = Budget(month: 6, category: 7, amount: 0, budget: false)
+            
+            augRentActual = Budget(month: 7, category: 0, amount: 0, budget: false)
+            augPowerActual = Budget(month: 7, category: 1, amount: 0, budget: false)
+            augWaterActual = Budget(month: 7, category: 2, amount: 0, budget: false)
+            augInternetActual = Budget(month: 7, category: 3, amount: 0, budget: false)
+            augPhoneActual = Budget(month: 7, category: 4, amount: 0, budget: false)
+            augFoodActual = Budget(month: 7, category: 5, amount: 0, budget: false)
+            augTransportationActual = Budget(month: 7, category: 6, amount: 0, budget: false)
+            augRecreationActual = Budget(month: 7, category: 7, amount: 0, budget: false)
+            
+            sepRentActual = Budget(month: 8, category: 0, amount: 0, budget: false)
+            sepPowerActual = Budget(month: 8, category: 1, amount: 0, budget: false)
+            sepWaterActual = Budget(month: 8, category: 2, amount: 0, budget: false)
+            sepInternetActual = Budget(month: 8, category: 3, amount: 0, budget: false)
+            sepPhoneActual = Budget(month: 8, category: 4, amount: 0, budget: false)
+            sepFoodActual = Budget(month: 8, category: 5, amount: 0, budget: false)
+            sepTransportationActual = Budget(month: 8, category: 6, amount: 0, budget: false)
+            sepRecreationActual = Budget(month: 8, category: 7, amount: 0, budget: false)
+            
+            octRentActual = Budget(month: 9, category: 0, amount: 0, budget: false)
+            octPowerActual = Budget(month: 9, category: 1, amount: 0, budget: false)
+            octWaterActual = Budget(month: 9, category: 2, amount: 0, budget: false)
+            octInternetActual = Budget(month: 9, category: 3, amount: 0, budget: false)
+            octPhoneActual = Budget(month: 9, category: 4, amount: 0, budget: false)
+            octFoodActual = Budget(month: 9, category: 5, amount: 0, budget: false)
+            octTransportationActual = Budget(month: 9, category: 6, amount: 0, budget: false)
+            octRecreationActual = Budget(month: 9, category: 7, amount: 0, budget: false)
+            
+            novRentActual = Budget(month: 10, category: 0, amount: 0, budget: false)
+            novPowerActual = Budget(month: 10, category: 1, amount: 0, budget: false)
+            novWaterActual = Budget(month: 10, category: 2, amount: 0, budget: false)
+            novInternetActual = Budget(month: 10, category: 3, amount: 0, budget: false)
+            novPhoneActual = Budget(month: 10, category: 4, amount: 0, budget: false)
+            novFoodActual = Budget(month: 10, category: 5, amount: 0, budget: false)
+            novTransportationActual = Budget(month: 10, category: 6, amount: 0, budget: false)
+            novRecreationActual = Budget(month: 10, category: 7, amount: 0, budget: false)
+            
+            decRentActual = Budget(month: 11, category: 0, amount: 0, budget: false)
+            decPowerActual = Budget(month: 11, category: 1, amount: 0, budget: false)
+            decWaterActual = Budget(month: 11, category: 2, amount: 0, budget: false)
+            decInternetActual = Budget(month: 11, category: 3, amount: 0, budget: false)
+            decPhoneActual = Budget(month: 11, category: 4, amount: 0, budget: false)
+            decFoodActual = Budget(month: 11, category: 5, amount: 0, budget: false)
+            decTransportationActual = Budget(month: 11, category: 6, amount: 0, budget: false)
+            decRecreationActual = Budget(month: 11, category: 7, amount: 0, budget: false)
+            
+            janActuals = [janRentActual, janPowerActual, janWaterActual, janInternetActual, janPhoneActual, janFoodActual, janTransportationActual, janRecreationActual]
+            febActuals = [febRentActual, febPowerActual, febWaterActual, febInternetActual, febPhoneActual, febFoodActual, febTransportationActual, febRecreationActual]
+            marActuals = [marRentActual, marPowerActual, marWaterActual, marInternetActual, marPhoneActual, marFoodActual, marTransportationActual, marRecreationActual]
+            aprActuals = [aprRentActual, aprPowerActual, aprWaterActual, aprInternetActual, aprPhoneActual, aprFoodActual, aprTransportationActual, aprRecreationActual]
+            mayActuals = [mayRentActual, mayPowerActual, mayWaterActual, mayInternetActual, mayPhoneActual, mayFoodActual, mayTransportationActual, mayRecreationActual]
+            junActuals = [junRentActual, junPowerActual, junWaterActual, junInternetActual, junPhoneActual, junFoodActual, junTransportationActual, junRecreationActual]
+            julActuals = [julRentActual, julPowerActual, julWaterActual, julInternetActual, julPhoneActual, julFoodActual, julTransportationActual, julRecreationActual]
+            augActuals = [augRentActual, augPowerActual, augWaterActual, augInternetActual, augPhoneActual, augFoodActual, augTransportationActual, augRecreationActual]
+            sepActuals = [sepRentActual, sepPowerActual, sepWaterActual, sepInternetActual, sepPhoneActual, sepFoodActual, sepTransportationActual, sepRecreationActual]
+            octActuals = [octRentActual, octPowerActual, octWaterActual, octInternetActual, octPhoneActual, octFoodActual, octTransportationActual, octRecreationActual]
+            novActuals = [novRentActual, novPowerActual, novWaterActual, novInternetActual, novPhoneActual, novFoodActual, novTransportationActual, novRecreationActual]
+            decActuals = [decRentActual, decPowerActual, decWaterActual, decInternetActual, decPhoneActual, decFoodActual, decTransportationActual, decRecreationActual]
+
+            actuals = [janActuals, febActuals, marActuals, aprActuals, mayActuals, junActuals, julActuals, augActuals, sepActuals, octActuals, novActuals, decActuals]
+            
+            try? context.save()
+        } else {
+            var x = 0
+            var y = 0
+            
+            for result in actualResults {
+                actuals[x][y] = result
+                
+                if y == 7 {
+                    x += 1
+                    y = 0
+                } else {
+                    y += 1
+                }
+            }
+            
+            try? context.save()
+        }
+    }
 }

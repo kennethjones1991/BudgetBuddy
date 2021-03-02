@@ -27,16 +27,6 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     var currentMonth = 0
     var titleMonth = "January"
     
-    var rent: Double = 0
-    var power: Double = 0
-    var water: Double = 0
-    var internet: Double = 0
-    var phone: Double = 0
-    var food: Double = 0
-    var transportation: Double = 0
-    var recreation: Double = 0
-    
-    var categories: [Double] = []
     var textFields: [UITextField] = []
     
     var eventStore = EKEventStore()
@@ -47,13 +37,19 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        categories = [rent, power, water, internet, phone, food, transportation, recreation]
         textFields = [rentTextField, powerTextField, waterTextField, internetTextField, phoneTextField, foodTextField, transportationTextField, recreationTextField]
         
         monthList.layer.cornerRadius = 7
         monthList.layer.borderWidth = 0.5
         monthList.layer.borderColor = UIColor.gray.cgColor
         monthList.isHidden = true
+        
+        updateValues()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
         updateValues()
     }
     
@@ -68,16 +64,9 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func updateValues() {
-        if let secondTab = self.tabBarController?.viewControllers?[1] as? ActualViewController {
-            secondTab.rent = rent
-            secondTab.power = power
-            secondTab.water = water
-            secondTab.internet = internet
-            secondTab.phone = phone
-            secondTab.food = food
-            secondTab.transportation = transportation
-            secondTab.recreation = recreation
+        if let secondTab = tabBarController?.viewControllers?[1] as? ActualViewController {
             secondTab.titleMonth = titleMonth
+            secondTab.currentMonth = currentMonth
         }
         
         if !firstInteraction() {
@@ -123,7 +112,6 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
             textField.text = "$\(String(format: "%.2f", amount))"
             
             self.moneyController.budgets[self.currentMonth][category].amount = amount
-            self.categories[category] = amount
             
             try? self.context.save()
             
@@ -212,43 +200,43 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     @IBAction func rentRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "rent", amount: rent)
-        showReminderAlert(budgetCategory: "rent", amount: rent)
+        addReminder(budgetCategory: "rent", amount: moneyController.budgets[currentMonth][0].amount)
+        showReminderAlert(budgetCategory: "rent", amount: moneyController.budgets[currentMonth][0].amount)
     }
     
     @IBAction func powerRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "power", amount: power)
-        showReminderAlert(budgetCategory: "power", amount: power)
+        addReminder(budgetCategory: "power", amount: moneyController.budgets[currentMonth][1].amount)
+        showReminderAlert(budgetCategory: "power", amount: moneyController.budgets[currentMonth][1].amount)
     }
     
     @IBAction func waterRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "water", amount: water)
-        showReminderAlert(budgetCategory: "water", amount: water)
+        addReminder(budgetCategory: "water", amount: moneyController.budgets[currentMonth][2].amount)
+        showReminderAlert(budgetCategory: "water", amount: moneyController.budgets[currentMonth][2].amount)
     }
     
     @IBAction func internetRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "internet", amount: internet)
-        showReminderAlert(budgetCategory: "internet", amount: internet)
+        addReminder(budgetCategory: "internet", amount: moneyController.budgets[currentMonth][3].amount)
+        showReminderAlert(budgetCategory: "internet", amount: moneyController.budgets[currentMonth][3].amount)
     }
     
     @IBAction func phoneRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "phone", amount: phone)
-        showReminderAlert(budgetCategory: "phone", amount: phone)
+        addReminder(budgetCategory: "phone", amount: moneyController.budgets[currentMonth][4].amount)
+        showReminderAlert(budgetCategory: "phone", amount: moneyController.budgets[currentMonth][4].amount)
     }
     
     @IBAction func foodRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "food", amount: food)
-        showReminderAlert(budgetCategory: "food", amount: food)
+        addReminder(budgetCategory: "food", amount: moneyController.budgets[currentMonth][5].amount)
+        showReminderAlert(budgetCategory: "food", amount: moneyController.budgets[currentMonth][5].amount)
     }
     
     @IBAction func transportationRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "transportation", amount: transportation)
-        showReminderAlert(budgetCategory: "transportation", amount: transportation)
+        addReminder(budgetCategory: "transportation", amount: moneyController.budgets[currentMonth][6].amount)
+        showReminderAlert(budgetCategory: "transportation", amount: moneyController.budgets[currentMonth][6].amount)
     }
     
     @IBAction func recreationRemindMe(_ sender: Any) {
-        addReminder(budgetCategory: "recreation", amount: recreation)
-        showReminderAlert(budgetCategory: "recreation", amount: recreation)
+        addReminder(budgetCategory: "recreation", amount: moneyController.budgets[currentMonth][7].amount)
+        showReminderAlert(budgetCategory: "recreation", amount: moneyController.budgets[currentMonth][7].amount)
     }
     
     // MARK: - Month Selection
@@ -258,7 +246,7 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MonthCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BudgetMonthCell", for: indexPath)
         
         cell.textLabel?.text = months[indexPath.row]
         
@@ -266,15 +254,13 @@ class BudgetViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedItem = months[indexPath.row]
-        
-        titleMonth = selectedItem
-        
+        titleMonth = months[indexPath.row]
         currentMonth = indexPath.row
         
         monthList.isHidden = true
         
         updateValues()
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
-
 }
