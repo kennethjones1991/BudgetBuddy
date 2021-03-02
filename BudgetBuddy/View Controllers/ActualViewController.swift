@@ -119,7 +119,11 @@ class ActualViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         let addAmountAction = UIAlertAction(title: "Add \(budget)", style: .default) { (_) in
             guard let amountText = amountTextField?.text,
-                  let amount = Double(amountText) else { return }
+                  let amount = Double(amountText) else {
+                self.showErrorAlert(budget: budget, category: category, textField: textField, label: label)
+                return
+            }
+            
             let budgetAmount = self.moneyController.budgets[self.currentMonth][category].amount
             
             textField.text = "$\(String(format: "%.2f", amount))"
@@ -138,6 +142,18 @@ class ActualViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         alert.addAction(addAmountAction)
         alert.addAction(cancelAction)
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    func showErrorAlert(budget: String, category: Int, textField: UITextField, label: UILabel) {
+        let alert = UIAlertController(title: "Error!", message: "Please enter a number.", preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+            self.showAddAlert(budget: budget, category: category, textField: textField, label: label)
+        }
+        
+        alert.addAction(okAction)
         
         present(alert, animated: true, completion: nil)
     }
