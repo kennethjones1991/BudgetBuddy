@@ -6,7 +6,8 @@ A budgeting app that allows you to enter your budget for different expense categ
 
 ## Screenshots
 Budget Screen
-<img src="https://github.com/kennethjones1991/BudgetBuddy/blob/93573d891ce5a59b5675e556bdfc2c483f849d33/Screenshots/01Budget.png" width="200"/>
+
+<img src="https://github.com/kennethjones1991/BudgetBuddy/blob/93573d891ce5a59b5675e556bdfc2c483f849d33/Screenshots/01Budget.png" width="400"/>
 
 EventKit Integration
 ![](https://github.com/kennethjones1991/BudgetBuddy/blob/fb1e73ee0522406ad306aeacb69a2a12f46743ec/Screenshots/02EventKitIntegration.png)
