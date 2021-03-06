@@ -18,7 +18,7 @@ Month Selector
 ![](https://github.com/kennethjones1991/BudgetBuddy/blob/fb1e73ee0522406ad306aeacb69a2a12f46743ec/Screenshots/04MonthSelector.png)
 
 Enter Budget Amount
-![](https://github.com/kennethjones1991/BudgetBuddy/blob/fb1e73ee0522406ad306aeacb69a2a12f46743ec/Screenshots/05EnterBudgetAmount.png)
+![](https://github.com/kennethjones1991/BudgetBuddy/blob/5a232d6914516304644f7048e2cc84ae5b5deae3/Screenshots/05EnterBudgetAmount.png)
 
 Expenses Screen
 ![](https://github.com/kennethjones1991/BudgetBuddy/blob/fb1e73ee0522406ad306aeacb69a2a12f46743ec/Screenshots/06Expenses.png)
